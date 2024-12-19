@@ -13,7 +13,7 @@ import java.util.Optional;
 @Repository
 public interface ReservationRepository extends JpaRepository<Reservation, Long>, ReservationRepositoryQuery {
 
-    @Query(value = "select distinct r from Reservation r join fetch r.user, r.item", nativeQuery = true)
+    @Query("select distinct r from Reservation r join fetch r.user")
     List<Reservation> findAllFetchJoin();
 
     @Query("SELECT r FROM Reservation r " +
