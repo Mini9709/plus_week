@@ -11,13 +11,10 @@ import java.util.List;
 import java.util.Optional;
 
 @Repository
-public interface ReservationRepository extends JpaRepository<Reservation, Long> {
+public interface ReservationRepository extends JpaRepository<Reservation, Long>, ReservationRepositoryQuery {
 
-    List<Reservation> findByUserIdAndItemId(Long userId, Long itemId);
-
-    List<Reservation> findByUserId(Long userId);
-
-    List<Reservation> findByItemId(Long itemId);
+    @Query(value = "select distinct r from Reservation r join fetch r.user, r.item", nativeQuery = true)
+    List<Reservation> findAllFetchJoin();
 
     @Query("SELECT r FROM Reservation r " +
             "WHERE r.item.id = :id " +
@@ -28,4 +25,8 @@ public interface ReservationRepository extends JpaRepository<Reservation, Long> 
             @Param("startAt") LocalDateTime startAt,
             @Param("endAt") LocalDateTime endAt
     );
+
+    default Reservation findReservationById(Long reservationId) {
+        return findById(reservationId).orElseThrow(() -> new IllegalArgumentException("해당 ID에 맞는 데이터가 존재하지 않습니다."));
+    }
 }
