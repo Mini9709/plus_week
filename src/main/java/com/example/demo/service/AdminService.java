@@ -24,10 +24,6 @@ public class AdminService {
             throw new IllegalArgumentException("해당 ID에 맞는 값이 존재하지 않습니다.");
         }
 
-        for (User userOne : user) {
-            userOne.updateStatusToBlocked();
-        }
-
-        userRepository.saveAll(user);
+        userRepository.updateAllUser(userIds);
     }
 }
